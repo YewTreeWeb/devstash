@@ -14,9 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          # fallow audit needs the base branch history to diff against
-          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
 
@@ -33,15 +30,21 @@ jobs:
       - name: Oxlint
         run: pnpm exec oxlint
 
+      # LayoutProps/PageProps live in .next/types, which a fresh checkout lacks
       - name: Type check
-        run: pnpm exec tsc --noEmit
-
-      - name: Fallow
-        run: pnpm exec fallow --format github-annotations
-
-      - name: Fallow audit
-        if: github.event_name == 'pull_request'
-        run: pnpm exec fallow audit --base origin/${{ github.base_ref }} --format github-annotations
+        run: pnpm exec next typegen && pnpm exec tsc --noEmit
 
       - name: Build
         run: pnpm build
+
+  fallow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # PRs gate only on findings they introduce; pushes to main run the full analysis
+      - uses: fallow-rs/fallow@v3
+        with:
+          command: ${{ github.event_name == 'pull_request' && 'audit' || '' }}
