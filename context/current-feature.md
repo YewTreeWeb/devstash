@@ -21,3 +21,4 @@ Not Started
 <!-- Keep this updated. Earliest to latest -->
 
 - Project setup and boilerplate cleanup
+- For the full change history, check [CHANGELOG.md](../CHANGELOG.md)
