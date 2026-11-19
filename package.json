@@ -6,8 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
+    "lint": "biome check && oxlint",
+    "format": "biome format --write",
+    "fallow": "fallow",
+    "fallow:audit": "fallow audit",
+    "prepare": "husky"
   },
   "dependencies": {
     "next": "16.4.6",
@@ -16,13 +19,25 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.2",
+    "@oxlint/plugins": "1.94.0",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "fallow": "^3.43.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.1",
+    "oxlint": "1.94.0",
     "tailwindcss": "4.3.3",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@12.21.0"
+  "packageManager": "pnpm@12.21.0",
+  "lint-staged": {
+    "*": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true",
+    "*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}": [
+      "sh -c \"fallow fix --yes --no-create-config --quiet\" --",
+      "oxlint --fix --no-error-on-unmatched-pattern"
+    ]
+  }
 }

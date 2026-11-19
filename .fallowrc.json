@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "ignorePatterns": ["tools/oxlint/anti-slop/**"],
+  "ignoreDependencies": ["@tailwindcss/turbopack", "@oxlint/plugins"],
+  "rules": {
+    "unused-dev-dependencies": "error",
+    "unused-optional-dependencies": "error",
+    "unused-component-props": "error",
+    "unused-server-actions": "error",
+    "css-token-drift": "error",
+    "css-duplicate-block": "error",
+    "css-selector-complexity": "error",
+    "css-dead-surface": "error",
+    "css-broken-reference": "error"
+  }
+}
