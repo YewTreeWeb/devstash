@@ -3,6 +3,7 @@ name = "cz_customize"
 version_provider = "npm"
 tag_format = "v$version"
 update_changelog_on_bump = true
+template = ".cz/CHANGELOG.md.j2"
 
 # Default cz_conventional_commits only lists feat/fix/refactor/perf; this adds chore, ci and docs
 [tool.commitizen.customize]
@@ -10,6 +11,6 @@ schema_pattern = "^(feat|fix|refactor|perf|chore|ci|docs|build|style|test|revert
 bump_pattern = "^((BREAKING[\\-\\ ]CHANGE|\\w+)(\\(.+\\))?!?):"
 bump_map = { "^.+!$" = "MAJOR", "^BREAKING[\\-\\ ]CHANGE" = "MAJOR", "^feat" = "MINOR", "^fix" = "PATCH", "^refactor" = "PATCH", "^perf" = "PATCH" }
 commit_parser = "^(?P<change_type>feat|fix|refactor|perf|chore|ci|docs|BREAKING CHANGE)(?:\\((?P<scope>[^()\\r\\n]*)\\)|\\()?(?P<breaking>!)?:\\s(?P<message>.*)?"
-changelog_pattern = "^(feat|fix|refactor|perf|chore|ci|docs|BREAKING CHANGE)(\\(.+\\))?(!)?:"
+changelog_pattern = "^(?!docs: update changelog)(feat|fix|refactor|perf|chore|ci|docs|BREAKING CHANGE)(\\(.+\\))?(!)?:"
 change_type_map = { "feat" = "Feat", "fix" = "Fix", "refactor" = "Refactor", "perf" = "Perf", "chore" = "Chore", "ci" = "CI", "docs" = "Docs" }
 change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf", "docs", "ci", "chore"]
