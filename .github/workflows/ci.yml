@@ -44,6 +44,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      # without node_modules fallow can't resolve the JSX runtime and flags react as unused
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
       # PRs gate only on findings they introduce; pushes to main run the full analysis
       - uses: fallow-rs/fallow@v3
         with:
