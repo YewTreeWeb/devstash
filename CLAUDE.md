@@ -19,7 +19,7 @@ Use pnpm (pinned in `packageManager`).
 
 - `pnpm dev`: dev server on http://localhost:3000
 - `pnpm build` / `pnpm start`: production build and serve
-- `pnpm lint`: `biome check --write && oxlint --fix`. It rewrites files, so run `pnpm exec biome check && pnpm exec oxlint` for a read-only check.
+- `pnpm lint`: `biome check && oxlint`. used for a read-only check.
 - `pnpm format`: Biome formatter only
 - `pnpm exec tsc --noEmit`: type check (no script for it)
 - `pnpm fallow`: whole-project analysis (dead code, duplication, complexity). `pnpm fallow:audit` checks only changed code.
@@ -44,6 +44,28 @@ Each tool has one job:
 Pre-commit (Husky + lint-staged in `package.json`) runs Biome, then `fallow fix`, then `oxlint --fix`. `fallow fix` is wrapped in `sh -c "..." --` because it takes no file list; keep the wrapper. A Claude Code PreToolUse hook (`.claude/hooks/fallow-gate.sh`) also runs `fallow audit` before `git commit` and `git push`.
 
 `tools/oxlint/anti-slop/` is the vendored dmmulroy/anti-slop plugin, excluded from Biome, `tsc`, and Fallow. Do not edit it in place; update it with the `install-anti-slop` skill and record the source commit in its `UPSTREAM.md`.
+
+## Branches
+
+- Put every feature and every bug fix on its own branch off `main`: `feature/<name>` or `fix/<name>`. Never commit feature or fix work directly to `main`.
+- Before pushing a branch, run `git fetch origin` and `git merge origin/main` to bring it up to date with `main`. The Changelog workflow commits to `main` after each push, so `main` moves often.
+- Resolve every merge conflict before pushing, then rerun the checks (`pnpm exec biome check`, `pnpm exec oxlint`, `pnpm exec tsc --noEmit`, `pnpm build`). For a conflict in `CHANGELOG.md`, take the `main` version; the workflow regenerates it.
+
+## Commits
+
+`CHANGELOG.md` is generated from commit messages by Commitizen (`.cz.toml`) in the Changelog workflow, so the commit message is the changelog entry.
+
+- Every commit message follows the Commitizen conventional commit format: `type(scope): summary`. Use only the types the changelog lists: `feat`, `fix`, `refactor`, `perf`, `docs`, `ci`, `chore`.
+- Write a detailed body that says what was done and what changed. Write each change as its own paragraph in the same `type(scope): message` format, separated by blank lines. Commitizen turns each one into its own changelog line; prose paragraphs are dropped.
+- Name the specific files, settings, or behavior that changed, not just the area.
+
+```
+ci: bump github actions off node 20
+
+ci(actions): bump actions/checkout and actions/setup-node to v7 and pnpm/action-setup to v6
+
+ci(changelog): pin astral-sh/setup-uv to v10.3.3, since it no longer publishes major tags
+```
 
 ## Code quality skills
 
